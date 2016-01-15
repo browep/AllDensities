@@ -1,0 +1,35 @@
+#!/usr/bin/ruby
+require 'optparse'
+
+options = {}
+OptionParser.new do |opts|
+  opts.banner = "Usage: example.rb [options]"
+
+  opts.on('-c COMMAND', '--command COMMAND', 'Command to run, cp $') { |v| options[:command] = v }
+  opts.on('-n', '--[no-]commit', 'dry run') { |v| options[:dry_run] = v }
+
+end.parse!
+
+densities = ["ldpi","mdpi","hdpi","xhdpi","xxhdpi","xxxhdpi"]
+
+densities.each do | density |
+	puts density
+end
+
+p options
+
+cmd = options[:command]
+
+densities.each do | density |
+	subbed_cmd = cmd.gsub '#', density
+	puts subbed_cmd
+	if !options[:dry_run]
+		begin
+			spawn subbed_cmd
+		rescue => error
+			puts error
+		end
+
+	end
+
+end
